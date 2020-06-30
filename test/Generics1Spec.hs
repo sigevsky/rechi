@@ -7,7 +7,7 @@ where
 import Data.Functor.Identity
 
 import Test.Hspec
-import Generics1RV
+import Generics.Generics1RV
 
 type Wridn = Wrap Identity
 

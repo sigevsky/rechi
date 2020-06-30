@@ -1,6 +1,6 @@
 {-# LANGUAGE PolyKinds, DataKinds, TypeOperators, GADTs #-}
 
-module Generics1RV
+module Generics.Generics1RV
   (GFunctor(..), Generics1(..), (:+:)(..), (:*:)(..), fmap', Wrap(..), UnitK(..))
 where
 
@@ -17,7 +17,7 @@ class Generics1 (f :: Type -> Type) where
 data UnitK x = Unit
 data (f :+: g) x = L (f x) | R (g x)
 data (f :*: g) x = P (f x) (g x)
-newtype Wrap f a = Wrap (f a)  
+newtype Wrap f a = Wrap (f a)
 
 fmap' :: (Generics1 f, GFunctor (Rep f)) => (a -> b) -> f a -> f b
 fmap' f = to . gfmap f . from

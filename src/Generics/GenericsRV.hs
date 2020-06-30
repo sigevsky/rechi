@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances, DataKinds, TypeApplications #-}
 
-module GenericsRV
+module Generics.GenericsRV
   (GenericS(..), Wrap(..), Cons(..), GEq, GCmp, GEnum, GBaseCases, GMemp, GTotal,
    eq, cmp, enum, memp, total, baseCases, parseEnum)
 where

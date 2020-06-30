@@ -5,7 +5,7 @@ module GenericsSpec
 where
 
 import Test.Hspec
-import GenericsRV
+import Generics.GenericsRV
 
 data Term = Var String | App Term Term | Abs String Term deriving Show
 
@@ -69,13 +69,13 @@ instance GenericS (Foo a) where
 
 spec :: Spec
 spec = do
-    describe "Equality checks" $ do 
+    describe "Equality checks" $ do
         it "should provide lambda equality check" $ example $
             (Abs "Second" (App (Var "x") (Var "y")) `eq` Abs "Second" (Var "z")) `shouldBe` False
         it "should provide lambda equality check" $ example $
             (RED `eq` BLUE) `shouldBe` False
 
-    describe "Equality checks" $ do 
+    describe "Equality checks" $ do
         it "should compare two different colours" $ example $
             (RED `cmp` BLUE) `shouldBe` GT
         it "should compare two similar colours" $ example $
@@ -83,7 +83,7 @@ spec = do
         it "should compare two lambdas" $ example $
             (Abs "Second" (App (Var "x") (Var "y")) `cmp` Abs "Second" (Var "z")) `shouldBe` LT
 
-    
+
     describe "Enum extraction" $
         it "should provide all 3 colours" $ example $
           enum `shouldContain` [RED, BLUE, GREEN]
@@ -102,5 +102,5 @@ spec = do
           parseEnum "GREEN" `shouldBe` Just GREEN
           parseEnum "BLUE" `shouldBe` Just BLUE
           parseEnum @Colour "blah" `shouldBe` Nothing
-        
+
 
