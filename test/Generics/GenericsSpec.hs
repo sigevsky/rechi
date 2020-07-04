@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances, DataKinds #-}
 
-module GenericsSpec
+module Generics.GenericsSpec
   (spec)
 where
 

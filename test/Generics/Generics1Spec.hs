@@ -1,6 +1,6 @@
 {-# LANGUAGE PolyKinds, DataKinds, TypeOperators, UndecidableInstances #-}
 
-module Generics1Spec
+module Generics.Generics1Spec
   (spec)
 where
 
