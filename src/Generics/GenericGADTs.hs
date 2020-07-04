@@ -1,4 +1,4 @@
-{-# LANGUAGE GADTs, DataKinds, MultiParamTypeClasses #-}
+{-# LANGUAGE GADTs, DataKinds, MultiParamTypeClasses, UndecidableInstances #-}
 module Generics.GenericGADTs
   (Repr(..), GRepr(..), Generics(..), geq)
 where
@@ -29,6 +29,8 @@ class Generics (c :: Type -> Constraint) a where
  from :: a -> GRepr c (Code a)
  to   :: GRepr c (Code a) -> a
 
+-- its a bit better then plain Either/Product in the sense that we brought (,) and Either constructors to same type thus adding
+-- an option of implementing functions on generic representation through plain pattern matching instead of typeclasses
 geq' :: GRepr Eq a -> GRepr Eq a -> Bool
 geq' (LGSum a) (LGSum b) = a `geq'` b
 geq' (RGSum a) (RGSum b) = a `geq'` b
@@ -41,4 +43,16 @@ geq' GUnit GUnit = True
 
 geq :: (Generics Eq a) => a -> a -> Bool
 geq a b = geq' (from a) (from b)
+
+class GEnum a where
+  genum :: [a]
+
+-- almost the same thing as writing enum for Either/Product based representation
+-- with the difference that here instances for which we could create enum are explicitly restricted by the choice of Repr
+-- i.e we cant create instance for GEnum (GRepr c blah)
+instance (GEnum (GRepr c a), GEnum (GRepr c b)) => GEnum (GRepr c (Sum a b)) where
+  genum = (LGSum <$> genum) ++ (RGSum <$> genum)
+
+instance GEnum (GRepr c Unit) where
+  genum = [GUnit]
 
