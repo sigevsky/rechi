@@ -3,10 +3,24 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: req-3.2.0@sha256:9ab272ed1840e63ac65476a95a3264be0f5f1860b6c9c6cbe2f1a9db6ab91c5b,3640
+    pantry-tree:
+      size: 712
+      sha256: 28a42e5995583a06d4f410175a804c078a3bfdd7b2622860582f605bbc5cd5fd
+  original:
+    hackage: req-3.2.0
+- completed:
+    hackage: retry-0.8.1.2@sha256:b81e7d7e5f068da82349a3c157a2ab25d399c9ca4841d1b6e54e8c4050cb065f,2189
+    pantry-tree:
+      size: 433
+      sha256: a9ebf74c0fce47b4e743c4d1a2c72fcc949a702e5790fa2784c835db17492012
+  original:
+    hackage: retry-0.8.1.2
 snapshots:
 - completed:
-    size: 497510
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/13/16.yaml
-    sha256: 3e56dd069db766f8e4c0a61ba49611e549c8b7757369fe1a063d1c33548790ac
-  original: lts-13.16
+    size: 534126
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/31.yaml
+    sha256: 637fb77049b25560622a224845b7acfe81a09fdb6a96a3c75997a10b651667f6
+  original: lts-16.31

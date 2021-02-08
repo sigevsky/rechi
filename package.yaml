@@ -25,11 +25,17 @@ dependencies:
 - text
 - mtl
 - parsec
-- wreq
+- req
 - hspec
 - containers
 - vector
 - comonad
+- aeson
+- lens-aeson
+- aeson-qq
+- unliftio
+- async
+- lens
 
 library:
   source-dirs: src
