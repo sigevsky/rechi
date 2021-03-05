@@ -36,6 +36,9 @@ dependencies:
 - unliftio
 - async
 - lens
+- lens-action
+- tagged
+- dlist
 
 library:
   source-dirs: src
