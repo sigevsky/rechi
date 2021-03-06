@@ -1,19 +1,17 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE InstanceSigs #-}
 -- {-# LANGUAGE PolyKinds #-}
 
 
-module HList
-    ()
-where
+module HList where
 
 import Data.Typeable
 
@@ -27,17 +25,16 @@ data HList (a :: [Type]) where
     (:#) :: a -> HList as -> HList (a ': as)
 
 class Premier xs a where
-    prem :: xs -> Maybe a
+    prem :: HList xs -> a
 
-instance Premier (HList '[]) a where
-    prem _ = Nothing
+gprem :: forall a xs . Premier xs a => HList xs -> a
+gprem = prem
 
-instance {-# OVERLAPPING #-} Premier (HList (x ': xs)) x where
-    prem (x :# _) = Just x
+instance {-# OVERLAPPING #-} Premier (x ': xs) x where
+    prem (x :# _) = x
 
-instance Premier (HList xs) a => Premier (HList (x ': xs)) a where
+instance Premier xs a => Premier (x ': xs) a where
     prem (_ :# xs) = prem xs
-
 
 headH :: HList (a ': as) -> a
 headH (a :# _) = a
@@ -62,3 +59,4 @@ instance (All Eq xs) => Eq (HList xs) where
 instance (All Ord xs, All Eq xs) => Ord (HList xs) where
     HNil <= HNil = True
     (x :# xs) <= (y :# ys) =  if x == y then xs <= ys else x <= y 
+
