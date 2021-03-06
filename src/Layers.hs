@@ -26,7 +26,7 @@ type family LastF a :: * where
   LastF x = x
 
 class Unfold xs f where
-  unfold :: HList xs -> f -> LastF f
+  unfold :: HList xs -> f -> HList (LastF f ': xs)
 
 instance {-# OVERLAPPING #-} (Premier xs a, Unfold xs b) => 
   Unfold xs (a -> b) where
@@ -34,10 +34,11 @@ instance {-# OVERLAPPING #-} (Premier xs a, Unfold xs b) =>
       where b = f $ gprem xs
 
 instance (b ~ LastF b) => Unfold xs b where
-  unfold hlst b = b
+  unfold hlst b = b :# hlst
 
 ctx :: HList '[A, B, C]
 ctx = A :# B :# C :# HNil
 
-blah :: HList '[ReqAB, A, B, C]
-blah = unfold ctx ReqAB :# ctx
+
+blah :: HList '[ReqA, A, B, C]
+blah = unfold ctx ReqA
