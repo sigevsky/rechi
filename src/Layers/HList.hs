@@ -11,7 +11,7 @@
 -- {-# LANGUAGE PolyKinds #-}
 
 
-module HList where
+module Layers.HList where
 
 import Data.Typeable
 
@@ -23,6 +23,12 @@ infixr 5 :#
 data HList (a :: [Type]) where
     HNil :: HList '[]
     (:#) :: a -> HList as -> HList (a ': as)
+
+hTail :: HList (a ': as) -> HList as
+hTail (_ :# xs) = xs
+
+hHead :: HList (a ': as) -> a
+hHead (x :# _) = x
 
 class Premier xs a where
     prem :: HList xs -> a
@@ -73,7 +79,6 @@ instance (HUnion (AppendTy xs a) as, UnionTys xs (a ': as) ~ UnionTys (AppendTy 
     HUnion xs (a ': as)  where
         hUnion acc (a :# as) = hUnion (apNp acc a) as
 
-
 instance Show (HList '[]) where
     show _ = "Nil"
 
@@ -89,16 +94,6 @@ instance HPermute as '[] where
 
 instance (Premier xs a, HPermute xs as) =>  HPermute xs (a ': as) where
     hPermute xs = gprem xs :# hPermute xs
-
-instance {-# OVERLAPPABLE #-} HPermute xs xs where
-    hPermute xs = xs
-
-c :: HList '[Integer, Char, String]
-c = 3 :# 'C' :# "Hello" :# HNil
-
-blah :: HList (UnionTys '[Int, String] '[String, Char])
-blah = undefined
-
 
 class Proj xss xs where
     hProj :: HList xss -> HList xs
@@ -124,6 +119,3 @@ instance (All Eq xs) => Eq (HList xs) where
 instance (All Ord xs, All Eq xs) => Ord (HList xs) where
     HNil <= HNil = True
     (x :# xs) <= (y :# ys) =  if x == y then xs <= ys else x <= y 
-
-headH :: HList (a ': as) -> a
-headH (a :# _) = a

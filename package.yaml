@@ -39,6 +39,7 @@ dependencies:
 - lens-action
 - tagged
 - dlist
+- natural-transformation
 
 library:
   source-dirs: src
