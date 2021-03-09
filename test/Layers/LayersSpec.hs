@@ -45,12 +45,11 @@ test6 :: Layer IO '[] '[ReqAB]
 test6 = fromFnM (\a b -> (pure () :: IO ()) >> return (ReqAB a b)) .$ (fromValue A $> fromValue B)
 
 
+e = fromValue A $> fromValueM (putStrLn "hell" >> return B)
 
-e :: Layer IO '[] '[A]
-e = fromValueM (putStrLn "hell" >> return A) $> fromValueM (putStrLn "hell" >> return A)
+blah1 = fromFn ReqAB
 
-blah :: Layer IO '[] '[ReqAB]
-blah = fromFn ReqAB .$ e
+blah = blah1 .$ e
 
 spec :: Spec
 spec = describe "Check helper hlist operations yield valid types" $ do

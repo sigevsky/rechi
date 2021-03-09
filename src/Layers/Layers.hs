@@ -98,30 +98,21 @@ subdvdM :: (HSplitM m f, Functor m) => f -> HList (FnPfx f) -> m (HList '[FnResu
 subdvdM f hs = (:# HNil) <$> e  
   where e = hHead <$> hSplitM f hs
 
-fromValue :: a -> Layer Identity '[] '[a]
-fromValue a = Layer $ \_ -> Identity $ a :# HNil
+fromValue :: Applicative m => a -> Layer m '[] '[a]
+fromValue a = Layer $ \_ -> pure $ a :# HNil
 
 fromValueM :: Functor m => m a -> Layer m '[] '[a]
 fromValueM a = Layer $ \_ -> (:# HNil) <$> a
 
-fromFn :: HSplit f => f -> Layer Identity (FnPfx f) '[FnResult f]
-fromFn f = Layer $ \ls -> Identity (subdvd f ls)
+fromFn :: (HSplit f, Applicative m) => f -> Layer m (FnPfx f) '[FnResult f]
+fromFn f = Layer $ \ls -> pure (subdvd f ls)
 
 fromFnM :: (HSplitM m f, Functor m) => f -> Layer m (FnPfx f) '[FnResultM m f ]
 fromFnM f = Layer $ subdvdM f
 
-class Embed m t where
-  embed :: m a -> t a
-
-instance {-# OVERLAPS #-} (m ~ t) => Embed m t where
-  embed = id
-
-instance {-# OVERLAPPING #-} Applicative t => Embed Identity t where
-  embed (Identity a) = pure a
-
 -- compose vertically
-(.$) :: (Monad m2, HPermute t1 t2, Embed m1 m2) => Layer m2 t2 o -> Layer m1 i t1 -> Layer m2 i o
-(Layer a) .$ (Layer b) = Layer $ embed . b >=> (a . hPermute)
+(.$) :: (Monad m, HPermute t1 t2) => Layer m t2 o -> Layer m i t1 -> Layer m i o
+(Layer a) .$ (Layer b) = Layer $ b >=> (a . hPermute)
 
 -- compose horizontally
 ($>) ::
