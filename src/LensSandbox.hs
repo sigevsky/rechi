@@ -166,6 +166,37 @@ c5 = users &
 --      sequenceAOf
 --        (key "users" . values . key "associated_ips" . _Array)
 
+-- optics by example
+
+conditional :: Lens' (Bool, a, a) a
+conditional f (cd, a1, a2) = if cd 
+                              then fmap (\na -> (cd, na, a2)) $ f a1 
+                              else fmap (\na -> (cd, a1, na)) $ f a1
+
+
+data Builder = Builder { context :: [String], build :: [String] -> String }
+
+-- changes not only a return value but the way the build function works as well, hence it breaks set-get law
+bldrUnlawful :: Lens' Builder String
+bldrUnlawful f (Builder l g) = fmap (Builder l . const) (f $ g l)
+
+bldr :: Lens' Builder String
+bldr f (Builder l g) = fmap (\ns -> Builder l (\ct -> if ct == l then ns else g ct)) (f $ g l)
+
+e1 :: String
+e1 = ["Yer" :: String, "a", "wizard", "Harry"] ^.. folded . folded
+
+e2 :: [Int]
+e2 = [[1, 2, 3], [4, 5, 6]] ^.. folded . Control.Lens.to (Prelude.take 2) . folded
+
+e3 :: [[Int]]
+e3 = [[1, 2, 3], [4, 5, 6]] ^.. folded . Control.Lens.to (Prelude.take 2)
+
+e4 :: [String]
+e4 = ["bob", "otto", "hannah"] ^.. folded . Control.Lens.to Prelude.reverse 
+
+e5 :: String
+e5 = ("abc", "def") ^.. folding (\(a, b) -> [a, b]) . Control.Lens.to Prelude.reverse . folded
 
 -- https://artyom.me/lens-over-tea-1
 
