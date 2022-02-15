@@ -41,6 +41,7 @@ dependencies:
 - dlist
 - natural-transformation
 - bytestring
+- conduit
 
 library:
   source-dirs: src

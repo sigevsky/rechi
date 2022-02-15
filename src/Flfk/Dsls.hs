@@ -89,7 +89,7 @@ mkFunc mpp s0 fm = (ref, body')
                 a <- either (throwIO . FailedDesInput) pure $ tryDes arg mpp
                 (eiRes, fstate) <- flip runStateT s0' . runExceptT . flip runReaderT (Env faddr) . runFuncM_ . runFuncM $ fm a
                 case eiRes of 
-                    Right v -> _
+                    Right v -> undefined
                     Left e -> throwIO e
 
 instance MonadState s (FuncM s as) where
